@@ -75,3 +75,13 @@ PACKAGE_FILES = [
     "prayer_notif_state.json",
     "ramadan_post_state.json",
 ]
+
+# bot/config.py
+
+EVENTS = {
+    "Double XP": {"xp_mult": 2},
+    "Crash Week": {"crash_odds": 0.3},
+    "Boom Frenzy": {"boom_odds": 0.3},
+    "Coin Rain": {"bonus_daily": 100},
+}
+
