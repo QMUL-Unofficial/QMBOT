@@ -1,28 +1,30 @@
 import json
 import os
 from typing import Any
-from .paths import data_path
+
+# Put your JSON files in a persistent folder if set (Railway volume recommended)
+DATA_DIR = os.getenv("DATA_DIR", ".")
+
+def path(name: str) -> str:
+    return os.path.join(DATA_DIR, name)
 
 def load_json(filename: str, default: Any):
-    path = data_path(filename)
-    if not os.path.exists(path):
+    fp = path(filename)
+    if not os.path.exists(fp):
         return default
     try:
-        with open(path, "r", encoding="utf-8") as f:
+        with open(fp, "r", encoding="utf-8") as f:
             return json.load(f)
     except json.JSONDecodeError:
         return default
-    except Exception:
-        return default
 
 def save_json(filename: str, obj: Any):
-    path = data_path(filename)
-    with open(path, "w", encoding="utf-8") as f:
+    fp = path(filename)
+    os.makedirs(os.path.dirname(fp) or ".", exist_ok=True)
+    with open(fp, "w", encoding="utf-8") as f:
         json.dump(obj, f, indent=2, ensure_ascii=False)
 
-def exists_file(filename: str) -> bool:
-    path = data_path(filename)
-    return os.path.exists(path) and os.path.isfile(path)
-
-def abs_path(filename: str) -> str:
-    return data_path(filename)
+def ensure_file(filename: str, default: Any):
+    fp = path(filename)
+    if not os.path.exists(fp):
+        save_json(filename, default)
