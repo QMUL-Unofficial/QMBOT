@@ -3,6 +3,7 @@ import asyncio
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
+from .client import bot
 
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
@@ -37,13 +38,13 @@ async def load_cogs():
         except Exception as e:
             print(f"[Cog] FAILED {ext}: {type(e).__name__}: {e}")
 
+def main():
+    load_dotenv()
+    token = os.getenv("DISCORD_TOKEN")
+    if not token:
+        raise RuntimeError("DISCORD_TOKEN not set")
+    bot.run(token)
 
-async def main():
-    if not TOKEN:
-        raise RuntimeError("DISCORD_TOKEN not set in environment.")
-    async with bot:
-        await load_cogs()
-        await bot.start(TOKEN)
 
 
 if __name__ == "__main__":
